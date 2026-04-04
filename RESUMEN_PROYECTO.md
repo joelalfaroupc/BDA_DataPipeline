@@ -654,18 +654,24 @@ Punto de entrada del script. Llama a `parse_args()` y luego a `run_all()`.
 
 Nota importante:
 
-- La `formatted zone` ya se ha ejecutado con Spark.
-- Esto queda reflejado en [formatted_zone_report.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_output/reports/formatted_zone_report.json) con `engine_used = spark`.
+- La `formatted zone` ya se ha ejecutado con Spark real usando la API de DataFrames.
+- La `trusted zone` tambien se ha ejecutado con Spark real para la aplicacion de reglas de calidad y limpieza.
+- Esto queda reflejado en:
+  - [formatted_zone_report.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/reports/formatted_zone_report.json)
+  - [trusted_zone_quality_report.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/reports/trusted_zone_quality_report.json)
+- La `landing zone` vuelve a persistir copias raw versionadas por timestamp dentro de `landing_zone/raw`.
+- Se han añadido notebooks por fase en [notebooks](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/notebooks) para ejecutar la pipeline y conservar outputs.
 
 ## Arquitectura De Zonas
 
 La pipeline esta dividida en:
 
-1. `landing`
-2. `formatted`
-3. `trusted`
-4. `exploitation`
-5. `analysis`
+1. `landing_zone`
+2. `formatted_zone`
+3. `trusted_zone`
+4. `exploitation_zone`
+5. `analysis_zone`
+6. `notebooks`
 
 ## 1. Landing Zone
 
@@ -677,18 +683,19 @@ Se copian los datasets originales a una zona de aterrizaje versionada por timest
 
 Se crean carpetas separadas por fuente:
 
-- `project_output/landing/pics/`
-- `project_output/landing/hotels/`
-- `project_output/landing/weather/`
-- `project_output/landing/airbnb_listings/`
-- `project_output/landing/airbnb_neighbourhoods/`
-- `project_output/landing/airbnb_reviews/`
+- `landing_zone/raw/pics/`
+- `landing_zone/raw/hotels/`
+- `landing_zone/raw/weather/`
+- `landing_zone/raw/airbnb_listings/`
+- `landing_zone/raw/airbnb_neighbourhoods/`
+- `landing_zone/raw/airbnb_reviews/`
+- `landing_zone/raw/airbnb_calendar/`
 
 Cada fichero se versiona con un prefijo temporal.
 
 ### Metadatos
 
-- [landing_manifest.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_output/reports/landing_manifest.json)
+- [landing_manifest.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/landing_zone/reports/landing_manifest.json)
 
 ## 2. Formatted Zone
 
@@ -698,13 +705,13 @@ Esta zona transforma cada fuente a un esquema tabular consistente y comun. Es la
 
 ### Tecnologia
 
-- obligatoriamente `Spark`
-- salida adicional en `DuckDB`
+- obligatoriamente `Spark / SparkSQL`
+- persistencia final en `DuckDB`
 
 ### Artefactos
 
-- [formatted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_output/formatted/formatted_zone.duckdb)
-- carpetas Spark en CSV y Parquet dentro de `project_output/formatted/...`
+- [formatted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/formatted_zone.duckdb)
+- [formatted_zone_report.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/reports/formatted_zone_report.json)
 
 ### Tablas De La Base De Datos
 
@@ -1177,13 +1184,18 @@ Fuente principal:
 
 - [project_pipeline.py](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_pipeline.py)
 - [RESUMEN_PROYECTO.md](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/RESUMEN_PROYECTO.md)
-- [project_summary.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_output/reports/project_summary.json)
-- [landing_manifest.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_output/reports/landing_manifest.json)
-- [formatted_zone_report.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_output/reports/formatted_zone_report.json)
-- [trusted_zone_quality_report.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_output/reports/trusted_zone_quality_report.json)
-- [formatted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_output/formatted/formatted_zone.duckdb)
-- [trusted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_output/trusted/trusted_zone.duckdb)
-- [exploitation_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_output/exploitation/exploitation_zone.duckdb)
+- [landing_manifest.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/landing_zone/reports/landing_manifest.json)
+- [formatted_zone_report.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/reports/formatted_zone_report.json)
+- [trusted_zone_quality_report.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/reports/trusted_zone_quality_report.json)
+- [exploitation_zone_report.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/reports/exploitation_zone_report.json)
+- [analysis_summary.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/reports/analysis_summary.json)
+- [formatted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/formatted_zone.duckdb)
+- [trusted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/trusted_zone.duckdb)
+- [exploitation_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/exploitation_zone.duckdb)
+- [best_booked_rate_model.pkl](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/models/best_booked_rate_model.pkl)
+- [train_dataset.csv](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/prediction/train_dataset.csv)
+- [test_dataset.csv](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/prediction/test_dataset.csv)
+- [notebooks](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/notebooks)
 
 ## Ejecucion
 
@@ -1191,7 +1203,20 @@ La ejecucion correcta, alineada con el PDF, es:
 
 ```bash
 export JAVA_HOME="$("/opt/homebrew/bin/brew" --prefix openjdk@21)/libexec/openjdk.jdk/Contents/Home"
-.venv/bin/python project_pipeline.py --engine spark
+.venv/bin/python landing_zone/run_landing.py
+.venv/bin/python formatted_zone/run_formatted.py
+.venv/bin/python trusted_zone/run_trusted.py
+.venv/bin/python exploitation_zone/run_exploitation.py
+.venv/bin/python analysis_zone/run_analysis.py
 ```
 
-El uso de `Spark` es obligatorio para la `formatted zone`.
+El uso de `Spark` es obligatorio para la `formatted zone` y la `trusted zone`.
+
+Tambien se puede ejecutar por notebooks:
+
+- [00_end_to_end.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/notebooks/00_end_to_end.ipynb)
+- [01_landing.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/notebooks/01_landing.ipynb)
+- [02_formatted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/notebooks/02_formatted.ipynb)
+- [03_trusted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/notebooks/03_trusted.ipynb)
+- [04_exploitation.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/notebooks/04_exploitation.ipynb)
+- [05_analysis.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/notebooks/05_analysis.ipynb)

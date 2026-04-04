@@ -1,0 +1,65 @@
+[
+  {
+    "dataset": "pics",
+    "original_rows": 1786,
+    "valid_rows": 878,
+    "removed_rows": 908,
+    "rules": {}
+  },
+  {
+    "dataset": "hotels",
+    "original_rows": 894,
+    "valid_rows": 446,
+    "removed_rows": 448,
+    "rules": {}
+  },
+  {
+    "dataset": "weather",
+    "original_rows": 41597,
+    "valid_rows": 20967,
+    "removed_rows": 20630,
+    "rules": {}
+  },
+  {
+    "dataset": "airbnb_neighbourhoods",
+    "original_rows": 73,
+    "valid_rows": 73,
+    "removed_rows": 0,
+    "rules": {}
+  },
+  {
+    "dataset": "airbnb_reviews",
+    "original_rows": 14421,
+    "valid_rows": 14421,
+    "removed_rows": 0,
+    "rules": {}
+  },
+  {
+    "dataset": "airbnb_listings",
+    "original_rows": 19410,
+    "valid_rows": 15276,
+    "removed_rows": 4134,
+    "rules": {}
+  },
+  {
+    "dataset": "airbnb_calendar",
+    "original_rows": 7084654,
+    "valid_rows": 5575744,
+    "removed_rows": 1508910,
+    "rules": {}
+  },
+  {
+    "dataset": "income_2022",
+    "original_rows": 1068,
+    "valid_rows": 1068,
+    "removed_rows": 0,
+    "rules": {}
+  },
+  {
+    "dataset": "hut_licenses",
+    "original_rows": 10730,
+    "valid_rows": 10724,
+    "removed_rows": 6,
+    "rules": {}
+  }
+]

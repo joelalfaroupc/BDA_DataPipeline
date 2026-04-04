@@ -1,0 +1,15 @@
+{
+  "run_id": "20260404T112053Z",
+  "created_at_utc": "2026-04-04T11:20:54.256160+00:00",
+  "datasets": {
+    "pics": "landing_zone/raw/pics/20260404T112053Z_opendatabcn_pics-csv.csv",
+    "weather": "landing_zone/raw/weather/20260404T112053Z_dataset_prat_temps_2025-26.csv",
+    "hotels": "landing_zone/raw/hotels/20260404T112053Z_opendatabcn_allotjament_hotels-csv.csv",
+    "airbnb_listings": "landing_zone/raw/airbnb_listings/20260404T112053Z_listings.csv",
+    "airbnb_neighbourhoods": "landing_zone/raw/airbnb_neighbourhoods/20260404T112053Z_neighbourhoods.csv",
+    "airbnb_reviews": "landing_zone/raw/airbnb_reviews/20260404T112053Z_reviews_airbnb.csv",
+    "airbnb_calendar": "landing_zone/raw/airbnb_calendar/20260404T112053Z_calendar.csv",
+    "income_2022": "landing_zone/raw/income_2022/20260404T112053Z_2022_renda_disponible_llars_per_persona.csv",
+    "hut_licenses": "landing_zone/raw/hut_licenses/20260404T112053Z_hut_comunicacio_opendata.csv"
+  }
+}

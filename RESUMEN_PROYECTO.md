@@ -2,371 +2,259 @@
 
 ## Objetivo
 
-El proyecto se ha adaptado para construir una pipeline end-to-end sobre Barcelona con foco en turismo, alojamiento y precios de Airbnb.
+El proyecto implementa una pipeline end-to-end de Data Engineering y Data Analysis sobre Barcelona para estudiar el mercado de Airbnb y su relacion con variables territoriales, turisticas y meteorologicas.
 
-Los objetivos actuales son:
+La arquitectura sigue las fases del enunciado:
 
-- integrar varias fuentes heterogeneas en una arquitectura por zonas
-- normalizar y limpiar los datos
-- construir una base analitica reutilizable
-- analizar como las zonas de Barcelona se relacionan con el precio y las caracteristicas de Airbnb mediante clustering
-- predecir `booked_rate` de Airbnb por zona y dia mediante regresion comparando varios modelos
+- `Landing Zone`
+- `Formatted Zone`
+- `Trusted Zone`
+- `Exploitation Zone`
+- `Analysis Zone`
 
-## Datasets Integrados
+La implementacion final esta organizada en notebooks autocontenidos por fase, con outputs guardados dentro de cada `.ipynb` y con artefactos persistidos por zona.
 
-Se han incorporado las siguientes fuentes:
+## Fuentes De Datos
+
+Los datasets integrados son:
 
 - `opendatabcn_pics-csv.csv`
-  Contiene puntos de interes, equipamientos y atributos de localizacion.
 - `opendatabcn_allotjament_hotels-csv.csv`
-  Contiene hoteles de Barcelona y su categoria.
 - `dataset_prat_temps_2025-26.csv`
-  Serie temporal meteorologica.
 - `listings.csv`
-  Dataset principal de Airbnb con precio, tipo de alojamiento, capacidad, reviews y coordenadas.
 - `neighbourhoods.csv`
-  Relacion barrio-distrito para Airbnb.
 - `reviews_airbnb.csv`
-  Reviews de Airbnb. En la pipeline no se guarda review a review, sino que se agregan por `listing_id`.
 - `calendar.csv`
-  Calendario diario de Airbnb por `listing_id` y fecha. Permite construir metricas temporales como `booked_rate`, `availability_rate` y `avg_calendar_price`.
+- `2022_renda_disponible_llars_per_persona.csv`
+- `hut_comunicacio_opendata.csv`
 
-## Scripts Modulares Por Fase
+Estas fuentes cubren:
 
-La modularizacion ya es real y esta organizada por carpetas de fase. Cada carpeta contiene su propio script y sus propios artefactos:
+- puntos de interes y equipamientos
+- hoteles
+- meteorologia diaria
+- oferta Airbnb
+- disponibilidad diaria de Airbnb
+- relacion barrio-distrito
+- reviews agregadas
+- renta por persona
+- licencias HUT
+
+## Estructura Final Del Proyecto
 
 - [landing_zone](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/landing_zone)
-  Script: [run_landing.py](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/landing_zone/run_landing.py)
+  Notebook: [landing.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/landing_zone/landing.ipynb)
 - [formatted_zone](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone)
-  Script: [run_formatted.py](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/run_formatted.py)
+  Notebook: [formatted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/formatted.ipynb)
 - [trusted_zone](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone)
-  Script: [run_trusted.py](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/run_trusted.py)
+  Notebook: [trusted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/trusted.ipynb)
 - [exploitation_zone](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone)
-  Script: [run_exploitation.py](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/run_exploitation.py)
+  Notebook: [exploitation.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/exploitation.ipynb)
 - [analysis_zone](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone)
-  Script: [run_analysis.py](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/run_analysis.py)
+  Notebook: [analysis.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/analysis.ipynb)
 
-Las utilidades compartidas de bajo nivel estan en:
-
-- [pipeline_common.py](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/pipeline_common.py)
-
-## Resultados Por Fase
-
-La ejecucion actual ya ha dejado los artefactos directamente dentro de cada carpeta de fase:
+Artefactos principales:
 
 - [landing_zone/reports/landing_manifest.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/landing_zone/reports/landing_manifest.json)
 - [formatted_zone/formatted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/formatted_zone.duckdb)
-- [formatted_zone/reports/formatted_zone_report.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/reports/formatted_zone_report.json)
 - [trusted_zone/trusted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/trusted_zone.duckdb)
-- [trusted_zone/reports/trusted_zone_quality_report.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/reports/trusted_zone_quality_report.json)
 - [exploitation_zone/exploitation_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/exploitation_zone.duckdb)
-- [exploitation_zone/reports/exploitation_zone_report.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/reports/exploitation_zone_report.json)
-- [analysis_zone/visualization](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/visualization)
-- [analysis_zone/clustering](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/clustering)
-- [analysis_zone/prediction](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/prediction)
+- [analysis_zone/reports/analysis_summary.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/reports/analysis_summary.json)
 
-Los CSV originales se conservan solo en la raiz de [PROYECTO](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO). En las fases ya no se persisten CSV intermedios duplicados; solo quedan bases `DuckDB`, reportes y resultados analiticos.
+## Requisitos Tecnicos
 
-## Explicacion Detallada De Las Funciones
+- Python 3
+- Java 21
+- PySpark
+- DuckDB
+- Jupyter Notebook
+- Matplotlib
 
-Esta seccion resume el papel de las funciones principales del script y como se relacionan entre si.
+Spark se usa en `formatted` y `trusted`, mientras que DuckDB se usa como almacenamiento persistente de las capas relacionales.
 
-### Funciones De Infraestructura
+## Flujo De Ejecucion
 
-#### `ensure_dirs()`
+### 1. Landing Zone
 
-Crea toda la estructura de carpetas del proyecto bajo `project_output`:
+El notebook [landing.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/landing_zone/landing.ipynb) copia los datasets raw a una estructura de ingesta versionada y genera un manifiesto con la ultima ejecucion.
 
-- `landing`
-- `formatted`
-- `trusted`
-- `exploitation`
-- `analysis`
-- `reports`
+Salida principal:
 
-Su objetivo es garantizar que cualquier escritura posterior tenga un directorio valido.
+- copias raw en `landing_zone/raw`
+- manifiesto de ejecucion
 
-#### `utc_run_id()`
+Para mantener la entrega ligera y trazable, se conserva solo la ultima copia raw de cada dataset.
 
-Genera un identificador temporal en UTC para versionar las ejecuciones. Se usa sobre todo en `landing`.
+Ultima ejecucion registrada:
 
-#### `canonical_name(name)`
+- `run_id`: `20260404T112053Z`
 
-Normaliza nombres de columnas:
+### 2. Formatted Zone
 
-- pasa a minusculas
-- reemplaza caracteres no alfanumericos por `_`
-- elimina repeticiones de `_`
+El notebook [formatted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/formatted.ipynb) implementa la homogeneizacion sintactica con Spark.
 
-Esto se usa al cargar CSV para unificar encabezados.
+Operaciones principales:
 
-### Funciones De Parseo Y Limpieza Basica
+- lectura de CSV raw
+- normalizacion de columnas y tipos
+- transformaciones Spark DataFrame
+- materializacion en DuckDB
 
-#### `strip_text(value)`
+Tablas generadas en [formatted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/formatted_zone.duckdb):
 
-Limpia cadenas:
+- `pics`
+- `hotels`
+- `weather`
+- `airbnb_listings`
+- `airbnb_neighbourhoods`
+- `airbnb_reviews`
+- `airbnb_calendar`
+- `income_2022`
+- `hut_licenses`
 
-- elimina BOM
-- elimina espacios
-- convierte `None` en cadena vacia
+Conteos actuales:
 
-#### `parse_float(value)`
+- `pics`: 1786
+- `hotels`: 894
+- `weather`: 41597
+- `airbnb_listings`: 19410
+- `airbnb_neighbourhoods`: 73
+- `airbnb_reviews`: 14421
+- `airbnb_calendar`: 7084654
+- `income_2022`: 1068
+- `hut_licenses`: 10730
 
-Convierte texto a `float`. Si no puede parsear, devuelve `None`.
+### 3. Trusted Zone
 
-#### `parse_int(value)`
+El notebook [trusted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/trusted.ipynb) implementa la evaluacion de calidad y la limpieza por dataset tambien con Spark.
 
-Convierte texto numerico a entero a partir de `parse_float`.
+Operaciones principales:
 
-#### `parse_bool(value)`
+- validacion de claves y campos obligatorios
+- filtrado de coordenadas invalidas
+- eliminacion de duplicados
+- reconciliacion de distrito-barrio
+- limpieza del calendario contra listings validos
 
-Convierte etiquetas tipo `true/false`, `t/f`, `1/0`, `yes/no` a `1` o `0`.
+La base resultante es [trusted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/trusted_zone.duckdb) y conserva las mismas tablas que `formatted`.
 
-#### `parse_dt(value, fmt=None)`
+Conteos validos actuales:
 
-Convierte fechas a formato ISO:
+- `pics`: 878
+- `hotels`: 446
+- `weather`: 20967
+- `airbnb_neighbourhoods`: 73
+- `airbnb_reviews`: 14421
+- `airbnb_listings`: 15276
+- `airbnb_calendar`: 5575744
+- `income_2022`: 1068
+- `hut_licenses`: 10724
 
-- usa un formato concreto si se pasa `fmt`
-- si no, intenta interpretar el texto como ISO
+### 4. Exploitation Zone
 
-#### `parse_price(value)`
+El notebook [exploitation.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/exploitation.ipynb) integra semanticamente las tablas de `trusted` y crea las vistas analiticas.
 
-Convierte precios tipo `$210.00` o `€210,00` en numerico.
+La base final unificada previa al analisis es:
 
-### Funciones De Entrada/Salida
+- [exploitation_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/exploitation_zone.duckdb)
 
-#### `load_rows(path, encoding)`
+Esta base no contiene una unica tabla gigante, sino varias tablas analiticas con distinta granularidad, lo que encaja con el enunciado.
 
-Lee un CSV completo y devuelve una lista de diccionarios con columnas ya normalizadas mediante `canonical_name`.
-
-#### `write_csv(path, rows)`
-
-Escribe una lista de diccionarios a CSV.
-
-#### `write_csv_stream(path, fieldnames, rows)`
-
-Escribe un CSV en streaming fila a fila. Esta funcion es clave para `calendar.csv`, ya que evita cargar millones de filas en memoria.
-
-#### `write_json(path, payload)`
-
-Escribe estructuras Python en JSON formateado.
-
-#### `infer_duckdb_type(values)`
-
-Infiera el tipo de columna en DuckDB:
-
-- `BIGINT`
-- `DOUBLE`
-- `TEXT`
-
-#### `write_duckdb_table(db_path, table_name, rows)`
-
-Crea o reemplaza una tabla en DuckDB a partir de una lista de diccionarios ya cargada en memoria.
-
-#### `write_duckdb_table_from_csv(db_path, table_name, csv_path)`
-
-Crea o reemplaza una tabla en DuckDB leyendo un CSV directamente con `read_csv_auto`. Es la opcion adecuada para tablas muy grandes como `airbnb_calendar`.
-
-### Funciones De Ingestion
-
-#### `run_collectors(run_id)`
-
-Implementa los data collectors de la `landing zone`:
-
-- copia cada dataset original
-- lo guarda en una carpeta por fuente
-- le añade prefijo temporal
-- genera `landing_manifest.json`
-
-### Funciones De Normalizacion Por Dataset
-
-#### `normalize_pics(rows)`
-
-Transforma `opendatabcn_pics-csv.csv` en una tabla tabular consistente con:
-
-- identificador
-- nombre
-- distrito y barrio
-- atributo semantico
-- coordenadas
-- fechas
-
-#### `normalize_hotels(rows)`
-
-Transforma el dataset de hoteles a una estructura comun con:
-
-- identificador
-- nombre
-- distrito y barrio
-- categoria
-- telefono
-- coordenadas
-- fechas
-
-#### `normalize_weather(rows)`
-
-Transforma la serie meteorologica:
-
-- parsea timestamp
-- deriva `date`
-- convierte medidas a numerico
-- conserva la fuente original
-
-#### `normalize_airbnb_listings(rows)`
-
-Transforma `listings.csv` al esquema base de Airbnb:
-
-- identificador del listing
-- zona
-- coordenadas
-- tipo de propiedad
-- tipo de habitacion
-- capacidad
-- precio
-- disponibilidad
-- reviews
-- reputacion
-- metrica del host
-
-#### `normalize_airbnb_calendar_row(row)`
-
-Normaliza una fila individual de `calendar.csv`:
-
-- `listing_id`
-- `date`
-- `available`
-- `price`
-- `adjusted_price`
-- `minimum_nights`
-- `maximum_nights`
-
-Se define por fila porque `calendar.csv` es demasiado grande para cargarse completo de golpe.
-
-#### `process_airbnb_calendar_formatted(spark)`
-
-Procesa `calendar.csv` para la `formatted zone`:
-
-- lo lee en streaming
-- escribe `airbnb_calendar.csv`
-- si hay Spark activo, genera tambien salidas Spark en CSV y Parquet
-- registra la tabla `airbnb_calendar` en DuckDB
-
-#### `normalize_airbnb_neighbourhoods(rows)`
-
-Transforma `neighbourhoods.csv` en una tabla de correspondencia:
-
-- `district_name`
-- `neighborhood_name`
-
-#### `aggregate_airbnb_reviews(path, encoding)`
-
-Agrega `reviews_airbnb.csv` por `listing_id`:
-
-- cuenta reviews
-- calcula longitud media del comentario
-- obtiene la fecha maxima de review
-
-No guarda las reviews crudas, sino un resumen por alojamiento.
-
-### Funciones De Formatted Zone
-
-#### `run_spark_formatter(spark, formatted_rows)`
-
-Recibe las tablas normalizadas ya en memoria y:
-
-- crea DataFrames Spark
-- escribe una version Spark CSV
-- escribe una version Spark Parquet
-
-Es la funcion que materializa la `formatted zone` con Spark.
-
-#### `run_formatted_zone(engine='spark')`
-
-Orquesta toda la `formatted zone`:
-
-- carga datasets crudos
-- normaliza todas las tablas
-- obliga a usar Spark
-- ejecuta `run_spark_formatter`
-- procesa `airbnb_calendar`
-- escribe tambien las tablas en `formatted_zone.duckdb`
-- genera `formatted_zone_report.json`
-
-### Funciones De Explotacion Analitica
-
-#### `build_airbnb_zone_day_features(trusted_rows, airbnb_listing_enriched, weather_daily)`
-
-Construye la tabla temporal unificada `airbnb_zone_day_features`, que es la base comun para el analisis temporal y predictivo.
-
-La funcion:
-
-- lee `trusted/airbnb_calendar/airbnb_calendar.csv`
-- hace el cruce por `listing_id` con `airbnb_listing_enriched`
-- hace el cruce por `date` con `weather_daily`
-- agrega por `district_name`, `neighborhood_name` y `date`
-
-Las columnas mas relevantes que genera son:
-
-- `listing_count`
-- `available_count`
-- `booked_count`
-- `availability_rate`
-- `booked_rate`
-- `avg_calendar_price`
-- `avg_minimum_nights`
-- `neighborhood_tourism_asset_score`
-- `district_tourism_asset_score`
-- variables meteorologicas diarias
-
-#### `run_exploitation_zone(trusted_rows)`
-
-Es la fase de integracion semantica. Genera la base final unificada del proyecto en:
-
-- [exploitation_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_output/exploitation/exploitation_zone.duckdb)
-
-Tablas principales:
+Tablas generadas:
 
 - `district_profile`
 - `neighborhood_profile`
+- `district_income_profile`
+- `neighborhood_income_profile`
+- `district_hut_profile`
+- `neighborhood_hut_profile`
 - `weather_daily`
 - `district_day_features`
 - `airbnb_listing_enriched`
 - `airbnb_zone_features`
 - `airbnb_zone_day_features`
 
-Esta es la unica base que consume la parte analitica.
+Granularidades:
 
-### Funciones De Analisis
+- `listing`: `airbnb_listing_enriched`
+- `zona`: `airbnb_zone_features`
+- `zona-dia`: `airbnb_zone_day_features`
+- `distrito`: perfiles de distrito
+- `barrio`: perfiles de barrio
+- `dia`: `weather_daily`
+- `distrito-dia`: `district_day_features`
 
-#### `run_clustering_pipeline(exploitation_db)`
+Conteos actuales:
 
-Lee `airbnb_zone_features` desde `exploitation_zone.duckdb` y aplica un clustering tipo `k-means` implementado en Python.
+- `district_profile`: 10
+- `neighborhood_profile`: 74
+- `district_income_profile`: 10
+- `neighborhood_income_profile`: 73
+- `district_hut_profile`: 10
+- `neighborhood_hut_profile`: 65
+- `weather_daily`: 290
+- `district_day_features`: 2900
+- `airbnb_listing_enriched`: 15276
+- `airbnb_zone_features`: 71
+- `airbnb_zone_day_features`: 25954
 
-Usa variables como:
+## Analisis Implementado
 
-- precio medio y mediano
-- rating
-- capacidad y dormitorios
-- disponibilidad
-- ratios de tipo de alojamiento
-- ratios de superhost e instant booking
-- señal turistica del barrio y del distrito
+El notebook [analysis.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/analysis.ipynb) consume exclusivamente [exploitation_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/exploitation_zone.duckdb).
 
-Salida:
+### 1. Visualizacion
 
-- `analysis/clustering/airbnb_zone_clusters.csv`
-- `analysis/clustering/cluster_summary.json`
-- grafica `cluster_avg_price.png`
+Se generan graficas descriptivas para explorar:
 
-#### `run_prediction_pipeline(exploitation_db)`
+- zonas con mayor `avg_price`
+- evolucion diaria de `temperature_avg`
 
-Lee `airbnb_zone_day_features` desde la misma base unificada de `exploitation`.
+Salidas:
 
-Define un problema de regresion:
+- [analysis_zone/visualization/airbnb_avg_price_by_zone.png](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/visualization/airbnb_avg_price_by_zone.png)
+- [analysis_zone/visualization/daily_temperature.png](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/visualization/daily_temperature.png)
+- [analysis_zone/visualization/airbnb_zone_top10.csv](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/visualization/airbnb_zone_top10.csv)
 
-- target: `booked_rate`
+### 2. Clustering
 
-Features utilizadas:
+Se segmentan las zonas Airbnb usando `airbnb_zone_features`.
+
+Variables principales:
+
+- `avg_price`
+- `median_price`
+- `avg_rating`
+- `avg_accommodates`
+- `avg_bedrooms`
+- `avg_availability_365`
+- `entire_home_ratio`
+- `private_room_ratio`
+- `superhost_ratio`
+- `instant_bookable_ratio`
+- `avg_review_count`
+- `neighborhood_tourism_asset_score`
+- `district_tourism_asset_score`
+
+Resultado actual:
+
+- `55` zonas clusterizadas
+- `k = 4`
+
+Salidas:
+
+- [analysis_zone/clustering/airbnb_zone_clusters.csv](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/clustering/airbnb_zone_clusters.csv)
+- [analysis_zone/clustering/cluster_summary.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/clustering/cluster_summary.json)
+- [analysis_zone/clustering/cluster_avg_price.png](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/clustering/cluster_avg_price.png)
+
+### 3. Prediccion
+
+Se implementa una pipeline de regresion sobre `airbnb_zone_day_features` para predecir `booked_rate`.
+
+Target:
+
+- `booked_rate`
+
+Features usadas:
 
 - `avg_calendar_price`
 - `avg_minimum_nights`
@@ -382,841 +270,50 @@ Features utilizadas:
 - `day_of_week`
 - `is_weekend`
 
-Modelos comparados de menor a mayor complejidad:
+Modelos comparados:
 
 - `baseline_mean`
 - `linear_regression`
-- `knn_regression`
+- `knn_regression_k_15`
 
-Evaluacion:
+Mejor modelo actual:
 
-- `RMSE`
-- `MAE`
-- `R²`
+- `knn_regression_k_15`
+- `RMSE = 0.068605`
+- `MAE = 0.054031`
+- `R2 = 0.567266`
 
-Artefactos generados:
+Salidas:
 
-- `analysis/prediction/booked_rate_predictions.csv`
-- `analysis/prediction/model_comparison.json`
-- `analysis/prediction/rmse_comparison.png`
-- `analysis/prediction/best_model_prediction_sample.png`
+- [analysis_zone/prediction/model_comparison.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/prediction/model_comparison.json)
+- [analysis_zone/prediction/booked_rate_predictions.csv](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/prediction/booked_rate_predictions.csv)
+- [analysis_zone/prediction/rmse_comparison.png](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/prediction/rmse_comparison.png)
+- [analysis_zone/prediction/best_model_prediction_sample.png](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/prediction/best_model_prediction_sample.png)
+- [analysis_zone/models/best_booked_rate_model.pkl](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/models/best_booked_rate_model.pkl)
 
-#### `run_analysis_pipelines(exploitation_db)`
+## Estado De Entrega
 
-Orquesta la fase analitica completa leyendo solo desde `exploitation_zone.duckdb`:
+La parte de Data Engineering previa al analisis queda alineada con el enunciado en estos puntos:
 
-- visualizacion
-- clustering
-- prediccion
+- `Landing` con ingesta raw persistida
+- `Formatted` implementada con Spark
+- `Trusted` implementada con Spark
+- `Exploitation` como base unificada final para consumo analitico
+- al menos dos pipelines analiticas
+- persistencia de resultados, graficas y modelo
 
-### Funciones De Calidad Y Trusted Zone
+## Orden Recomendado De Revision
 
-#### `is_barcelona_coordinate(latitude, longitude)`
+Para revisar el proyecto de forma rapida:
 
-Valida si unas coordenadas caen dentro de un bounding box aproximado de Barcelona.
+1. abrir [landing.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/landing_zone/landing.ipynb)
+2. abrir [formatted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/formatted.ipynb)
+3. abrir [trusted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/trusted.ipynb)
+4. abrir [exploitation.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/exploitation.ipynb)
+5. abrir [analysis.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/analysis.ipynb)
 
-#### `evaluate_and_clean_formatted(formatted_rows)`
+## Nota Final
 
-Aplica reglas de calidad a todas las tablas de `formatted`:
+La estrategia analitica actual todavia no incorpora `income_2022` ni `hut_licenses` como features del clustering o de la prediccion. Estas dos fuentes ya estan integradas en la backbone de datos y quedan disponibles para una posible evolucion final del analisis.
 
-- elimina duplicados
-- valida identidades
-- valida distrito y barrio
-- valida coordenadas
-- valida rangos de clima
-- valida precio y capacidad Airbnb
-
-Devuelve:
-
-- tablas limpias
-- resumen de calidad por dataset
-
-#### `run_trusted_zone(formatted_rows)`
-
-Orquesta la `trusted zone`:
-
-- ejecuta `evaluate_and_clean_formatted`
-- escribe las tablas limpias en CSV
-- escribe tablas limpias en `trusted_zone.duckdb`
-- procesa `airbnb_calendar` filtrando solo listings validos
-- genera `trusted_zone_quality_report.json`
-
-### Funciones De Agregacion Analitica
-
-#### `aggregate_weather_daily(weather_rows)`
-
-Agrega la serie meteorologica a nivel diario.
-
-#### `build_district_profile(trusted_rows)`
-
-Construye un perfil turistico por distrito combinando:
-
-- hoteles
-- puntos de interes
-
-#### `build_neighborhood_tourism_profile(trusted_rows)`
-
-Construye un perfil turistico por barrio combinando:
-
-- hoteles
-- puntos de interes
-- mapeo barrio-distrito Airbnb
-
-#### `median(values)`
-
-Devuelve la mediana de una lista numerica.
-
-#### `build_airbnb_listing_enriched(trusted_rows, district_profile, neighborhood_profile)`
-
-Es el join principal del proyecto a nivel de listing. Parte de `airbnb_listings` y lo enriquece con:
-
-- reviews agregadas por `listing_id`
-- perfil turistico del barrio
-- perfil turistico del distrito
-
-#### `build_airbnb_zone_features(listing_rows)`
-
-Agrega `airbnb_listing_enriched` por `(district_name, neighborhood_name)` para crear una tabla de zonas.
-
-Calcula:
-
-- precios medios y medianos
-- ratings
-- capacidad
-- disponibilidad
-- ratios de tipo de alojamiento
-- ratios de host
-- indicadores turisticos
-
-#### `build_district_day_features(district_profile, weather_daily)`
-
-Cruza:
-
-- perfil de distrito
-- clima diario
-
-Genera una tabla `distrito-dia`.
-
-#### `build_airbnb_zone_day_features(trusted_rows, airbnb_listing_enriched, weather_daily)`
-
-Construye la base final unificada `zona-dia`:
-
-- une listings Airbnb validos
-- usa `calendar.csv` para disponibilidad y precio por fecha
-- añade perfil turistico por barrio y distrito
-- añade la meteorologia diaria
-
-Esta es la tabla mas cercana a una base unificada final con componente espacial y temporal.
-
-## Base Unificada En Exploitation
-
-La base unificada final del proyecto debe vivir en la `Exploitation Zone`, porque segun el enunciado es en esta capa donde:
-
-- se fusionan datasets de la `Trusted Zone`
-- se realiza la integracion semantica
-- se exponen las vistas listas para las pipelines analiticas
-
-Por tanto, la base principal para analisis es:
-
-- [exploitation_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_output/exploitation/exploitation_zone.duckdb)
-
-Esta base contiene las tablas integradas y listas para consumo analitico:
-
-- `district_profile`
-- `neighborhood_profile`
-- `weather_daily`
-- `district_day_features`
-- `airbnb_listing_enriched`
-- `airbnb_zone_features`
-- `airbnb_zone_day_features`
-
-La analitica debe leer de esta base unificada en `exploitation`, no de una capa final adicional separada.
-
-### Funciones De Exploitation Zone
-
-#### `run_exploitation_zone(trusted_rows)`
-
-Orquesta la `exploitation zone`:
-
-- crea perfiles por distrito
-- crea perfiles por barrio
-- agrega clima diario
-- construye `district_day_features`
-- construye `airbnb_listing_enriched`
-- construye `airbnb_zone_features`
-- construye `airbnb_zone_day_features`
-- guarda todo en CSV y en `exploitation_zone.duckdb`
-
-### Funciones De Visualizacion
-
-#### `save_plot(path, title, x_values, y_values, kind='bar')`
-
-Genera graficos simples si `matplotlib` esta disponible.
-
-#### `run_visualization_pipeline(final_db)`
-
-Genera un resumen descriptivo:
-
-- ranking de zonas con mayor precio medio
-- export de resultados a CSV
-- graficos si la libreria grafica esta disponible
-
-Lee los datos desde la base final unificada, en particular desde:
-
-- `airbnb_zone_features`
-- `weather_daily`
-
-### Funciones Del Clustering
-
-#### `mean(values)`
-
-Calcula la media aritmetica.
-
-#### `euclidean_distance(a, b)`
-
-Calcula distancia euclidea entre dos vectores.
-
-#### `standardize_matrix(matrix)`
-
-Estandariza columnas de una matriz numerica:
-
-- resta la media
-- divide por la desviacion estandar
-
-#### `run_kmeans(matrix, k=4, max_iter=40)`
-
-Implementa un `k-means` sencillo en Python:
-
-- inicializa centroides
-- reasigna filas al centroide mas cercano
-- recalcula centroides
-- devuelve etiquetas e inercia
-
-#### `describe_clusters(rows, labels)`
-
-Resume cada cluster:
-
-- numero de zonas
-- distritos presentes
-- precio medio
-- rating medio
-- capacidad media
-- intensidad turistica media
-
-#### `run_clustering_pipeline(final_db)`
-
-Ejecuta el analisis principal del proyecto:
-
-- toma `airbnb_zone_features` desde la base final
-- filtra zonas con suficiente numero de listings
-- selecciona variables relevantes
-- estandariza
-- ejecuta `k-means`
-- escribe `airbnb_zone_clusters.csv`
-- escribe `cluster_summary.json`
-
-### Funciones Finales De Orquestacion
-
-#### `write_project_summary(run_id, analysis_outputs)`
-
-Genera `project_summary.json` con:
-
-- identificador de ejecucion
-- rutas de zonas
-- resultados del analisis
-
-#### `run_all(engine)`
-
-Ejecuta toda la pipeline completa en orden:
-
-1. landing
-2. formatted
-3. trusted
-4. exploitation
-5. analysis
-
-#### `parse_args()`
-
-Lee argumentos CLI. Actualmente fuerza `--engine spark`.
-
-#### `main()`
-
-Punto de entrada del script. Llama a `parse_args()` y luego a `run_all()`.
-
-## Tecnologia Usada
-
-- `Spark / PySpark`
-  Obligatorio en la `formatted zone`, tal como pide el PDF.
-- `DuckDB`
-  Base de datos fisica para almacenar tablas de `formatted`, `trusted` y `exploitation`.
-- `Python`
-  Orquestacion, limpieza, agregacion y analisis.
-
-Nota importante:
-
-- La `formatted zone` ya se ha ejecutado con Spark real usando la API de DataFrames.
-- La `trusted zone` tambien se ha ejecutado con Spark real para la aplicacion de reglas de calidad y limpieza.
-- Esto queda reflejado en:
-  - [formatted_zone_report.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/reports/formatted_zone_report.json)
-  - [trusted_zone_quality_report.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/reports/trusted_zone_quality_report.json)
-- La `landing zone` vuelve a persistir copias raw versionadas por timestamp dentro de `landing_zone/raw`.
-- Se han añadido notebooks por fase en [notebooks](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/notebooks) para ejecutar la pipeline y conservar outputs.
-
-## Arquitectura De Zonas
-
-La pipeline esta dividida en:
-
-1. `landing_zone`
-2. `formatted_zone`
-3. `trusted_zone`
-4. `exploitation_zone`
-5. `analysis_zone`
-6. `notebooks`
-
-## 1. Landing Zone
-
-### Funcion
-
-Se copian los datasets originales a una zona de aterrizaje versionada por timestamp. Esta capa conserva el dato de entrada sin transformacion.
-
-### Estructura
-
-Se crean carpetas separadas por fuente:
-
-- `landing_zone/raw/pics/`
-- `landing_zone/raw/hotels/`
-- `landing_zone/raw/weather/`
-- `landing_zone/raw/airbnb_listings/`
-- `landing_zone/raw/airbnb_neighbourhoods/`
-- `landing_zone/raw/airbnb_reviews/`
-- `landing_zone/raw/airbnb_calendar/`
-
-Cada fichero se versiona con un prefijo temporal.
-
-### Metadatos
-
-- [landing_manifest.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/landing_zone/reports/landing_manifest.json)
-
-## 2. Formatted Zone
-
-### Funcion
-
-Esta zona transforma cada fuente a un esquema tabular consistente y comun. Es la capa de estandarizacion.
-
-### Tecnologia
-
-- obligatoriamente `Spark / SparkSQL`
-- persistencia final en `DuckDB`
-
-### Artefactos
-
-- [formatted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/formatted_zone.duckdb)
-- [formatted_zone_report.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/reports/formatted_zone_report.json)
-
-### Tablas De La Base De Datos
-
-#### `pics`
-
-Representa puntos de interes y atributos asociados.
-
-Campos principales:
-
-- `record_id`
-- `name`
-- `district_id`
-- `district_name`
-- `neighborhood_id`
-- `neighborhood_name`
-- `road_name`
-- `zip_code`
-- `town`
-- `attribute_category`
-- `attribute_name`
-- `attribute_value`
-- `main_address`
-- `latitude`
-- `longitude`
-- `created_at`
-- `modified_at`
-
-#### `hotels`
-
-Representa hoteles y su clasificacion.
-
-Campos principales:
-
-- `record_id`
-- `name`
-- `district_id`
-- `district_name`
-- `neighborhood_id`
-- `neighborhood_name`
-- `road_name`
-- `zip_code`
-- `town`
-- `category_name`
-- `category_path`
-- `phone_label`
-- `phone_value`
-- `main_address`
-- `latitude`
-- `longitude`
-- `created_at`
-- `modified_at`
-
-#### `weather`
-
-Serie meteorologica homogeneizada.
-
-Campos principales:
-
-- `record_id`
-- `timestamp`
-- `date`
-- `record_index`
-- `wind_speed_avg`
-- `wind_direction_avg`
-- `wind_speed_max`
-- `wind_direction_smm`
-- `pressure_avg`
-- `temperature_avg`
-- `humidity_avg`
-- `radiation_avg`
-- `rain_total`
-- `source_file`
-
-#### `airbnb_listings`
-
-Tabla principal para el analisis de precios.
-
-Campos principales:
-
-- `listing_id`
-- `name`
-- `district_name`
-- `neighborhood_name`
-- `neighbourhood_raw`
-- `latitude`
-- `longitude`
-- `property_type`
-- `room_type`
-- `accommodates`
-- `bathrooms`
-- `bathrooms_text`
-- `bedrooms`
-- `beds`
-- `price`
-- `minimum_nights`
-- `maximum_nights`
-- `availability_365`
-- `number_of_reviews`
-- `reviews_per_month`
-- `review_scores_rating`
-- `review_scores_location`
-- `review_scores_value`
-- `host_is_superhost`
-- `host_identity_verified`
-- `instant_bookable`
-- `calculated_host_listings_count`
-- `estimated_occupancy_l365d`
-- `estimated_revenue_l365d`
-- `last_scraped`
-- `last_review`
-
-#### `airbnb_neighbourhoods`
-
-Tabla de correspondencia barrio-distrito.
-
-Campos:
-
-- `district_name`
-- `neighborhood_name`
-
-#### `airbnb_reviews`
-
-No almacena reviews individuales, sino un agregado por listing.
-
-Campos:
-
-- `listing_id`
-- `review_count`
-- `avg_comment_length`
-- `last_review_date`
-
-### Estructura Fisica Spark
-
-Para cada dataset se generan:
-
-- `project_output/formatted/<dataset>/csv/`
-- `project_output/formatted/<dataset>/parquet/`
-
-### Metadatos
-
-- [formatted_zone_report.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_output/reports/formatted_zone_report.json)
-
-## 3. Trusted Zone
-
-### Funcion
-
-Se aplican reglas de calidad, eliminacion de duplicados y validaciones semanticas. Esta capa mantiene las mismas tablas que `formatted`, pero con datos depurados.
-
-### Base De Datos
-
-- [trusted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_output/trusted/trusted_zone.duckdb)
-
-### Tablas
-
-Se preservan las mismas tablas:
-
-- `pics`
-- `hotels`
-- `weather`
-- `airbnb_listings`
-- `airbnb_neighbourhoods`
-- `airbnb_reviews`
-
-### Reglas De Calidad Aplicadas
-
-#### `pics`
-
-- identidad obligatoria
-- distrito obligatorio
-- coordenadas validas dentro de Barcelona
-- eliminacion de duplicados por `(record_id, attribute_name, attribute_value)`
-
-#### `hotels`
-
-- identidad obligatoria
-- distrito obligatorio
-- coordenadas validas
-- eliminacion de duplicados por `record_id`
-
-#### `weather`
-
-- timestamp obligatorio
-- eliminacion de duplicados por timestamp
-- validacion de temperatura
-- validacion de humedad
-- validacion de presion
-- validacion de radiacion
-- validacion de precipitacion
-
-#### `airbnb_neighbourhoods`
-
-- distrito obligatorio
-- barrio obligatorio
-- eliminacion de duplicados
-
-#### `airbnb_reviews`
-
-- agregacion unica por `listing_id`
-- descarte de filas sin identificador
-
-#### `airbnb_listings`
-
-- identidad obligatoria
-- barrio obligatorio
-- distrito obligatorio
-- imputacion de distrito desde `airbnb_neighbourhoods` cuando es posible
-- coordenadas validas en Barcelona
-- precio valido
-- capacidad valida
-- rating valido si existe
-- eliminacion de duplicados por `listing_id`
-
-### Metadatos
-
-- [trusted_zone_quality_report.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_output/reports/trusted_zone_quality_report.json)
-
-## 4. Exploitation Zone
-
-### Funcion
-
-Se construyen datasets analiticos ya integrados para consumo de negocio o modelos.
-
-### Base De Datos
-
-- [exploitation_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_output/exploitation/exploitation_zone.duckdb)
-
-### Tablas De La Base De Datos
-
-#### `district_profile`
-
-Perfil turistico agregado a nivel de distrito.
-
-Campos:
-
-- `district_name`
-- `hotels_count`
-- `pics_count`
-- `neighborhood_count`
-- `top_hotel_category`
-- `tourism_asset_score`
-
-Interpretacion:
-
-- resume la intensidad hotelera y de puntos de interes por distrito
-- `tourism_asset_score = hotels_count * 2 + pics_count`
-
-#### `neighborhood_profile`
-
-Perfil turistico agregado a nivel de barrio.
-
-Campos:
-
-- `district_name`
-- `neighborhood_name`
-- `pics_count`
-- `hotels_count`
-- `tourism_asset_score`
-
-#### `weather_daily`
-
-Agregacion diaria de la serie meteorologica.
-
-Campos:
-
-- `date`
-- `temperature_avg`
-- `humidity_avg`
-- `pressure_avg`
-- `radiation_avg`
-- `wind_speed_avg`
-- `rain_total`
-- `records_per_day`
-
-#### `district_day_features`
-
-Cruce entre perfil de distrito y meteorologia diaria.
-
-Campos:
-
-- `date`
-- `district_name`
-- `hotels_count`
-- `pics_count`
-- `neighborhood_count`
-- `tourism_asset_score`
-- `temperature_avg`
-- `humidity_avg`
-- `pressure_avg`
-- `radiation_avg`
-- `wind_speed_avg`
-- `rain_total`
-
-#### `airbnb_listing_enriched`
-
-Tabla principal a nivel de listing, enriquecida con informacion territorial y turistica.
-
-Bloques de columnas:
-
-- identificacion:
-  `listing_id`, `name`
-- localizacion:
-  `district_name`, `neighborhood_name`, `latitude`, `longitude`
-- caracteristicas del alojamiento:
-  `property_type`, `room_type`, `accommodates`, `bathrooms`, `bedrooms`, `beds`
-- precio y disponibilidad:
-  `price`, `minimum_nights`, `maximum_nights`, `availability_365`
-- reviews y reputacion:
-  `number_of_reviews`, `reviews_per_month`, `review_scores_rating`, `review_scores_location`, `review_scores_value`
-- host:
-  `host_is_superhost`, `host_identity_verified`, `instant_bookable`, `calculated_host_listings_count`
-- negocio:
-  `estimated_occupancy_l365d`, `estimated_revenue_l365d`
-- reviews agregadas:
-  `review_count_from_reviews_csv`, `avg_comment_length`
-- senal turistica del barrio:
-  `neighborhood_pics_count`, `neighborhood_hotels_count`, `neighborhood_tourism_asset_score`
-- senal turistica del distrito:
-  `district_pics_count`, `district_hotels_count`, `district_tourism_asset_score`
-
-#### `airbnb_zone_features`
-
-Tabla agregada por `(district_name, neighborhood_name)` y principal entrada del clustering.
-
-Campos:
-
-- `district_name`
-- `neighborhood_name`
-- `listing_count`
-- `avg_price`
-- `median_price`
-- `avg_rating`
-- `avg_accommodates`
-- `avg_bedrooms`
-- `avg_availability_365`
-- `avg_reviews_per_month`
-- `entire_home_ratio`
-- `private_room_ratio`
-- `superhost_ratio`
-- `instant_bookable_ratio`
-- `avg_review_count`
-- `avg_comment_length`
-- `neighborhood_pics_count`
-- `neighborhood_hotels_count`
-- `neighborhood_tourism_asset_score`
-- `district_tourism_asset_score`
-
-Interpretacion:
-
-- cada fila representa una zona de Airbnb
-- mezcla variables de precio, composicion de oferta, reputacion y entorno turistico
-
-## 5. Analysis
-
-### Objetivo Analitico
-
-Estudiar como las zonas de Barcelona afectan al precio y al perfil de los alojamientos Airbnb.
-
-Toda la parte analitica debe consumir:
-
-- [exploitation_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_output/exploitation/exploitation_zone.duckdb)
-
-### Analisis 1: Visualizacion Descriptiva
-
-Se genera un ranking de zonas por precio medio.
-
-Fuente principal:
-
-- tabla `airbnb_zone_features` de `exploitation_zone.duckdb`
-
-Salida principal:
-
-- [airbnb_zone_top10.csv](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_output/analysis/visualization/airbnb_zone_top10.csv)
-
-Informacion destacada de la ultima ejecucion:
-
-- aparecen zonas caras en `Sant Marti` y `Eixample`
-- ejemplos: `Diagonal Mar i el Front Maritim del Poblenou`, `la Dreta de l'Eixample`, `Sant Antoni`
-
-### Analisis 2: Clustering De Zonas Airbnb
-
-Se ha sustituido el analisis anterior de regresion por un clustering de zonas Airbnb.
-
-#### Unidad de analisis
-
-- una zona = una fila de `airbnb_zone_features`
-- se clusterizan solo zonas con suficiente volumen de listings
-
-Fuente principal:
-
-- tabla `airbnb_zone_features` de `exploitation_zone.duckdb`
-
-#### Variables usadas en el clustering
-
-- `avg_price`
-- `median_price`
-- `avg_rating`
-- `avg_accommodates`
-- `avg_bedrooms`
-- `avg_availability_365`
-- `entire_home_ratio`
-- `private_room_ratio`
-- `superhost_ratio`
-- `instant_bookable_ratio`
-- `avg_review_count`
-- `neighborhood_tourism_asset_score`
-- `district_tourism_asset_score`
-
-#### Metodo
-
-- estandarizacion de variables
-- clustering tipo `k-means`
-- `k = 4`
-
-#### Salidas
-
-- [airbnb_zone_clusters.csv](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_output/analysis/clustering/airbnb_zone_clusters.csv)
-- [cluster_summary.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_output/analysis/clustering/cluster_summary.json)
-
-#### Resultado de la ultima ejecucion
-
-- listings Airbnb enriquecidos: `15256`
-- zonas agregadas: `71`
-- zonas usadas en clustering: `55`
-- numero de clusters: `4`
-- inercia: `311.305901`
-
-#### Lectura de clusters
-
-##### Cluster 0
-
-- zonas: `7`
-- distritos destacados: `Ciutat Vella`, `Gracia`, `Sarria-Sant Gervasi`
-- precio medio aproximado: `140.29`
-- alta intensidad turistica media
-- muchos listings por zona
-
-##### Cluster 1
-
-- zonas: `28`
-- cluster mas grande
-- precio medio aproximado: `147.61`
-- intensidad turistica media-baja
-- mezcla de distritos mas residenciales y perifericos
-
-##### Cluster 2
-
-- zonas: `11`
-- precio medio aproximado: `81.88`
-- menor capacidad media
-- baja intensidad turistica
-- representa zonas mas economicas
-
-##### Cluster 3
-
-- zonas: `9`
-- distritos destacados: `Eixample` y `Sant Marti`
-- precio medio aproximado: `223.34`
-- mayor capacidad media
-- mayor valor de mercado
-
-### Conclusiones Del Analisis
-
-- el precio no depende solo del distrito, sino del barrio concreto
-- la senal turistica del entorno ayuda a separar zonas premium de zonas residenciales
-- `Eixample` y partes de `Sant Marti` concentran las zonas con mayor precio medio
-- existen zonas turisticas consolidadas con precio intermedio pero gran densidad de oferta
-- los clusters mas baratos suelen combinar menor capacidad media y menor intensidad turistica
-
-## Archivos Relevantes
-
-- [project_pipeline.py](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/project_pipeline.py)
-- [RESUMEN_PROYECTO.md](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/RESUMEN_PROYECTO.md)
-- [landing_manifest.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/landing_zone/reports/landing_manifest.json)
-- [formatted_zone_report.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/reports/formatted_zone_report.json)
-- [trusted_zone_quality_report.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/reports/trusted_zone_quality_report.json)
-- [exploitation_zone_report.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/reports/exploitation_zone_report.json)
-- [analysis_summary.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/reports/analysis_summary.json)
-- [formatted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/formatted_zone.duckdb)
-- [trusted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/trusted_zone.duckdb)
-- [exploitation_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/exploitation_zone.duckdb)
-- [best_booked_rate_model.pkl](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/models/best_booked_rate_model.pkl)
-- [train_dataset.csv](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/prediction/train_dataset.csv)
-- [test_dataset.csv](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/prediction/test_dataset.csv)
-- [notebooks](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/notebooks)
-
-## Ejecucion
-
-La ejecucion correcta, alineada con el PDF, es:
-
-```bash
-export JAVA_HOME="$("/opt/homebrew/bin/brew" --prefix openjdk@21)/libexec/openjdk.jdk/Contents/Home"
-.venv/bin/python landing_zone/run_landing.py
-.venv/bin/python formatted_zone/run_formatted.py
-.venv/bin/python trusted_zone/run_trusted.py
-.venv/bin/python exploitation_zone/run_exploitation.py
-.venv/bin/python analysis_zone/run_analysis.py
-```
-
-El uso de `Spark` es obligatorio para la `formatted zone` y la `trusted zone`.
-
-Tambien se puede ejecutar por notebooks:
-
-- [00_end_to_end.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/notebooks/00_end_to_end.ipynb)
-- [01_landing.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/notebooks/01_landing.ipynb)
-- [02_formatted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/notebooks/02_formatted.ipynb)
-- [03_trusted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/notebooks/03_trusted.ipynb)
-- [04_exploitation.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/notebooks/04_exploitation.ipynb)
-- [05_analysis.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/notebooks/05_analysis.ipynb)
+Los notebooks quedan ejecutados y con outputs persistidos dentro de cada `.ipynb`, lo que facilita la revision visual durante la entrega.

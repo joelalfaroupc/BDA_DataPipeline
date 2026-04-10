@@ -2,9 +2,9 @@
 
 ## Objetivo
 
-El proyecto implementa una pipeline end-to-end de Data Engineering y Data Analysis sobre Barcelona para estudiar el mercado de Airbnb y su relacion con variables territoriales, turisticas y meteorologicas.
+El proyecto implementa una pipeline end-to-end para integrar fuentes heterogeneas sobre Barcelona y construir una base analitica sobre turismo, alojamiento, Airbnb, meteorologia, renta y licencias HUT.
 
-La arquitectura sigue las fases del enunciado:
+La entrega queda organizada en cinco fases:
 
 - `Landing Zone`
 - `Formatted Zone`
@@ -12,95 +12,68 @@ La arquitectura sigue las fases del enunciado:
 - `Exploitation Zone`
 - `Analysis Zone`
 
-La implementacion final esta organizada en notebooks autocontenidos por fase, con outputs guardados dentro de cada `.ipynb` y con artefactos persistidos por zona.
+Cada fase tiene su propio notebook autocontenido y sus outputs quedan embebidos en el `.ipynb`. Como artefactos externos solo se conservan los CSV raw de landing y las bases DuckDB de las zonas relacionales.
 
 ## Fuentes De Datos
 
-Los datasets integrados son:
+Se integran nueve fuentes:
 
-- `opendatabcn_pics-csv.csv`
-- `opendatabcn_allotjament_hotels-csv.csv`
-- `dataset_prat_temps_2025-26.csv`
-- `listings.csv`
-- `neighbourhoods.csv`
-- `reviews_airbnb.csv`
-- `calendar.csv`
-- `2022_renda_disponible_llars_per_persona.csv`
-- `hut_comunicacio_opendata.csv`
-
-Estas fuentes cubren:
-
-- puntos de interes y equipamientos
-- hoteles
-- meteorologia diaria
-- oferta Airbnb
-- disponibilidad diaria de Airbnb
-- relacion barrio-distrito
-- reviews agregadas
-- renta por persona
+- puntos de interes de OpenDataBCN
+- hoteles de OpenDataBCN
+- meteorologia
+- listings de Airbnb
+- barrios de Airbnb
+- reviews de Airbnb
+- calendario diario de Airbnb
+- renta disponible por persona
 - licencias HUT
 
-## Estructura Final Del Proyecto
+Los CSV fuente se almacenan de forma versionada en `landing_zone/raw`.
 
-- [landing_zone](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/landing_zone)
-  Notebook: [landing.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/landing_zone/landing.ipynb)
-- [formatted_zone](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone)
-  Notebook: [formatted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/formatted.ipynb)
-- [trusted_zone](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone)
-  Notebook: [trusted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/trusted.ipynb)
-- [exploitation_zone](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone)
-  Notebook: [exploitation.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/exploitation.ipynb)
-- [analysis_zone](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone)
-  Notebook: [analysis.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/analysis.ipynb)
+## Estructura De Entrega
 
-Artefactos principales:
+- [landing_zone/landing.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/landing_zone/landing.ipynb)
+- [formatted_zone/formatted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/formatted.ipynb)
+- [trusted_zone/trusted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/trusted.ipynb)
+- [exploitation_zone/exploitation.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/exploitation.ipynb)
+- [analysis_zone/analysis.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/analysis.ipynb)
 
-- [landing_zone/reports/landing_manifest.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/landing_zone/reports/landing_manifest.json)
+Bases persistidas:
+
 - [formatted_zone/formatted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/formatted_zone.duckdb)
 - [trusted_zone/trusted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/trusted_zone.duckdb)
 - [exploitation_zone/exploitation_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/exploitation_zone.duckdb)
-- [analysis_zone/reports/analysis_summary.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/reports/analysis_summary.json)
 
-## Requisitos Tecnicos
+## Landing Zone
 
-- Python 3
-- Java 21
-- PySpark
-- DuckDB
-- Jupyter Notebook
-- Matplotlib
+La fase `landing` conserva los datos tal como llegan, sin transformaciones analiticas.
 
-Spark se usa en `formatted` y `trusted`, mientras que DuckDB se usa como almacenamiento persistente de las capas relacionales.
+Que hace:
 
-## Flujo De Ejecucion
+- localiza cada dataset
+- crea una copia raw versionada por timestamp
+- deja el inventario de la ingesta como output del notebook
 
-### 1. Landing Zone
+Salida persistida:
 
-El notebook [landing.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/landing_zone/landing.ipynb) copia los datasets raw a una estructura de ingesta versionada y genera un manifiesto con la ultima ejecucion.
+- CSV en `landing_zone/raw`
 
-Salida principal:
+## Formatted Zone
 
-- copias raw en `landing_zone/raw`
-- manifiesto de ejecucion
+La fase `formatted` implementa la homogeneizacion sintactica usando Spark.
 
-Para mantener la entrega ligera y trazable, se conserva solo la ultima copia raw de cada dataset.
+Que hace:
 
-Ultima ejecucion registrada:
+- lee los CSV desde `landing_zone/raw`
+- normaliza nombres, tipos y columnas
+- genera una tabla por dataset
+- persiste el resultado en DuckDB
 
-- `run_id`: `20260404T112053Z`
+Base resultante:
 
-### 2. Formatted Zone
+- [formatted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/formatted_zone.duckdb)
 
-El notebook [formatted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/formatted.ipynb) implementa la homogeneizacion sintactica con Spark.
-
-Operaciones principales:
-
-- lectura de CSV raw
-- normalizacion de columnas y tipos
-- transformaciones Spark DataFrame
-- materializacion en DuckDB
-
-Tablas generadas en [formatted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/formatted_zone.duckdb):
+Tablas:
 
 - `pics`
 - `hotels`
@@ -112,55 +85,37 @@ Tablas generadas en [formatted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/B
 - `income_2022`
 - `hut_licenses`
 
-Conteos actuales:
+## Trusted Zone
 
-- `pics`: 1786
-- `hotels`: 894
-- `weather`: 41597
-- `airbnb_listings`: 19410
-- `airbnb_neighbourhoods`: 73
-- `airbnb_reviews`: 14421
-- `airbnb_calendar`: 7084654
-- `income_2022`: 1068
-- `hut_licenses`: 10730
+La fase `trusted` implementa calidad y limpieza usando Spark.
 
-### 3. Trusted Zone
+Que hace:
 
-El notebook [trusted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/trusted.ipynb) implementa la evaluacion de calidad y la limpieza por dataset tambien con Spark.
+- lee las tablas de `formatted_zone.duckdb`
+- aplica reglas de calidad por dataset
+- elimina duplicados
+- valida coordenadas y campos obligatorios
+- reconcilia listings con barrios/distritos
+- filtra el calendario contra listings validos
+- persiste las tablas limpias en DuckDB
 
-Operaciones principales:
+Base resultante:
 
-- validacion de claves y campos obligatorios
-- filtrado de coordenadas invalidas
-- eliminacion de duplicados
-- reconciliacion de distrito-barrio
-- limpieza del calendario contra listings validos
+- [trusted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/trusted_zone.duckdb)
 
-La base resultante es [trusted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/trusted_zone.duckdb) y conserva las mismas tablas que `formatted`.
+Mantiene las mismas tablas que `formatted`, pero con calidad mejorada.
 
-Conteos validos actuales:
+## Exploitation Zone
 
-- `pics`: 878
-- `hotels`: 446
-- `weather`: 20967
-- `airbnb_neighbourhoods`: 73
-- `airbnb_reviews`: 14421
-- `airbnb_listings`: 15276
-- `airbnb_calendar`: 5575744
-- `income_2022`: 1068
-- `hut_licenses`: 10724
+La fase `exploitation` integra semanticamente las tablas limpias de `trusted`.
 
-### 4. Exploitation Zone
-
-El notebook [exploitation.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/exploitation.ipynb) integra semanticamente las tablas de `trusted` y crea las vistas analiticas.
-
-La base final unificada previa al analisis es:
+Base final previa al analisis:
 
 - [exploitation_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/exploitation_zone.duckdb)
 
-Esta base no contiene una unica tabla gigante, sino varias tablas analiticas con distinta granularidad, lo que encaja con el enunciado.
+Esta base no es una unica tabla gigante. Es una base con varias vistas analiticas, cada una con una granularidad distinta.
 
-Tablas generadas:
+Tablas principales:
 
 - `district_profile`
 - `neighborhood_profile`
@@ -174,146 +129,35 @@ Tablas generadas:
 - `airbnb_zone_features`
 - `airbnb_zone_day_features`
 
-Granularidades:
+Uso de las tablas:
 
-- `listing`: `airbnb_listing_enriched`
-- `zona`: `airbnb_zone_features`
-- `zona-dia`: `airbnb_zone_day_features`
-- `distrito`: perfiles de distrito
-- `barrio`: perfiles de barrio
-- `dia`: `weather_daily`
-- `distrito-dia`: `district_day_features`
+- `airbnb_zone_features`: clustering por zona
+- `airbnb_zone_day_features`: prediccion temporal de `booked_rate`
+- perfiles de distrito y barrio: contexto territorial, turistico, renta y HUT
+- `weather_daily`: contexto meteorologico diario
 
-Conteos actuales:
+## Analysis Zone
 
-- `district_profile`: 10
-- `neighborhood_profile`: 74
-- `district_income_profile`: 10
-- `neighborhood_income_profile`: 73
-- `district_hut_profile`: 10
-- `neighborhood_hut_profile`: 65
-- `weather_daily`: 290
-- `district_day_features`: 2900
-- `airbnb_listing_enriched`: 15276
-- `airbnb_zone_features`: 71
-- `airbnb_zone_day_features`: 25954
+La fase `analysis` consume exclusivamente `exploitation_zone.duckdb`.
 
-## Analisis Implementado
+Pipelines implementadas:
 
-El notebook [analysis.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/analysis.ipynb) consume exclusivamente [exploitation_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/exploitation_zone.duckdb).
+- visualizacion descriptiva
+- clustering de zonas Airbnb
+- prediccion de `booked_rate`
 
-### 1. Visualizacion
+Los resultados se conservan como output del notebook, no como archivos externos.
 
-Se generan graficas descriptivas para explorar:
+## Estado Final
 
-- zonas con mayor `avg_price`
-- evolucion diaria de `temperature_avg`
+El proyecto queda alineado con el enunciado:
 
-Salidas:
-
-- [analysis_zone/visualization/airbnb_avg_price_by_zone.png](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/visualization/airbnb_avg_price_by_zone.png)
-- [analysis_zone/visualization/daily_temperature.png](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/visualization/daily_temperature.png)
-- [analysis_zone/visualization/airbnb_zone_top10.csv](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/visualization/airbnb_zone_top10.csv)
-
-### 2. Clustering
-
-Se segmentan las zonas Airbnb usando `airbnb_zone_features`.
-
-Variables principales:
-
-- `avg_price`
-- `median_price`
-- `avg_rating`
-- `avg_accommodates`
-- `avg_bedrooms`
-- `avg_availability_365`
-- `entire_home_ratio`
-- `private_room_ratio`
-- `superhost_ratio`
-- `instant_bookable_ratio`
-- `avg_review_count`
-- `neighborhood_tourism_asset_score`
-- `district_tourism_asset_score`
-
-Resultado actual:
-
-- `55` zonas clusterizadas
-- `k = 4`
-
-Salidas:
-
-- [analysis_zone/clustering/airbnb_zone_clusters.csv](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/clustering/airbnb_zone_clusters.csv)
-- [analysis_zone/clustering/cluster_summary.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/clustering/cluster_summary.json)
-- [analysis_zone/clustering/cluster_avg_price.png](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/clustering/cluster_avg_price.png)
-
-### 3. Prediccion
-
-Se implementa una pipeline de regresion sobre `airbnb_zone_day_features` para predecir `booked_rate`.
-
-Target:
-
-- `booked_rate`
-
-Features usadas:
-
-- `avg_calendar_price`
-- `avg_minimum_nights`
-- `listing_count`
-- `neighborhood_tourism_asset_score`
-- `district_tourism_asset_score`
-- `temperature_avg`
-- `humidity_avg`
-- `radiation_avg`
-- `wind_speed_avg`
-- `rain_total`
-- `month`
-- `day_of_week`
-- `is_weekend`
-
-Modelos comparados:
-
-- `baseline_mean`
-- `linear_regression`
-- `knn_regression_k_15`
-
-Mejor modelo actual:
-
-- `knn_regression_k_15`
-- `RMSE = 0.068605`
-- `MAE = 0.054031`
-- `R2 = 0.567266`
-
-Salidas:
-
-- [analysis_zone/prediction/model_comparison.json](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/prediction/model_comparison.json)
-- [analysis_zone/prediction/booked_rate_predictions.csv](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/prediction/booked_rate_predictions.csv)
-- [analysis_zone/prediction/rmse_comparison.png](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/prediction/rmse_comparison.png)
-- [analysis_zone/prediction/best_model_prediction_sample.png](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/prediction/best_model_prediction_sample.png)
-- [analysis_zone/models/best_booked_rate_model.pkl](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/models/best_booked_rate_model.pkl)
-
-## Estado De Entrega
-
-La parte de Data Engineering previa al analisis queda alineada con el enunciado en estos puntos:
-
-- `Landing` con ingesta raw persistida
-- `Formatted` implementada con Spark
-- `Trusted` implementada con Spark
-- `Exploitation` como base unificada final para consumo analitico
+- data collector y landing raw
+- formatted zone con Spark
+- trusted zone con Spark
+- exploitation zone como repositorio integrado para analisis
 - al menos dos pipelines analiticas
-- persistencia de resultados, graficas y modelo
+- persistencia en DuckDB
+- entrega en notebooks ejecutables y revisables
 
-## Orden Recomendado De Revision
-
-Para revisar el proyecto de forma rapida:
-
-1. abrir [landing.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/landing_zone/landing.ipynb)
-2. abrir [formatted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/formatted.ipynb)
-3. abrir [trusted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/trusted.ipynb)
-4. abrir [exploitation.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/exploitation.ipynb)
-5. abrir [analysis.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/analysis.ipynb)
-
-## Nota Final
-
-La estrategia analitica actual todavia no incorpora `income_2022` ni `hut_licenses` como features del clustering o de la prediccion. Estas dos fuentes ya estan integradas en la backbone de datos y quedan disponibles para una posible evolucion final del analisis.
-
-Los notebooks quedan ejecutados y con outputs persistidos dentro de cada `.ipynb`, lo que facilita la revision visual durante la entrega.
+Nota: las fuentes `income_2022` y `hut_licenses` ya estan integradas en la base de explotacion, aunque la estrategia analitica actual todavia no las usa como variables del clustering o de la prediccion.

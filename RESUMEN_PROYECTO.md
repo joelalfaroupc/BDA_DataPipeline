@@ -32,17 +32,17 @@ Los CSV fuente se almacenan de forma versionada en `landing_zone/raw`.
 
 ## Estructura De Entrega
 
-- [landing_zone/landing.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/landing_zone/landing.ipynb)
-- [formatted_zone/formatted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/formatted.ipynb)
-- [trusted_zone/trusted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/trusted.ipynb)
-- [exploitation_zone/exploitation.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/exploitation.ipynb)
-- [analysis_zone/analysis.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/analysis.ipynb)
+- [landing_zone/landing.ipynb](landing_zone/landing.ipynb)
+- [formatted_zone/formatted.ipynb](formatted_zone/formatted.ipynb)
+- [trusted_zone/trusted.ipynb](trusted_zone/trusted.ipynb)
+- [exploitation_zone/exploitation.ipynb](exploitation_zone/exploitation.ipynb)
+- [analysis_zone/analysis.ipynb](analysis_zone/analysis.ipynb)
 
 Bases persistidas:
 
-- [formatted_zone/formatted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/formatted_zone.duckdb)
-- [trusted_zone/trusted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/trusted_zone.duckdb)
-- [exploitation_zone/exploitation_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/exploitation_zone.duckdb)
+- [formatted_zone/formatted_zone.duckdb](formatted_zone/formatted_zone.duckdb)
+- [trusted_zone/trusted_zone.duckdb](trusted_zone/trusted_zone.duckdb)
+- [exploitation_zone/exploitation_zone.duckdb](exploitation_zone/exploitation_zone.duckdb)
 
 ## Landing Zone
 
@@ -71,7 +71,7 @@ Que hace:
 
 Base resultante:
 
-- [formatted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/formatted_zone.duckdb)
+- [formatted_zone.duckdb](formatted_zone/formatted_zone.duckdb)
 
 Tablas:
 
@@ -101,7 +101,7 @@ Que hace:
 
 Base resultante:
 
-- [trusted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/trusted_zone.duckdb)
+- [trusted_zone.duckdb](trusted_zone/trusted_zone.duckdb)
 
 Mantiene las mismas tablas que `formatted`, pero con calidad mejorada.
 
@@ -111,7 +111,7 @@ La fase `exploitation` integra semanticamente las tablas limpias de `trusted`.
 
 Base final previa al analisis:
 
-- [exploitation_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/exploitation_zone.duckdb)
+- [exploitation_zone.duckdb](exploitation_zone/exploitation_zone.duckdb)
 
 Esta base no es una unica tabla gigante. Es una base con varias vistas analiticas, cada una con una granularidad distinta.
 
@@ -161,3 +161,8 @@ El proyecto queda alineado con el enunciado:
 - entrega en notebooks ejecutables y revisables
 
 Nota: las fuentes `income_2022` y `hut_licenses` ya estan integradas en la base de explotacion, aunque la estrategia analitica actual todavia no las usa como variables del clustering o de la prediccion.
+
+
+## Guía de consulta del portfolio
+
+El análisis más reciente está en [analysis_updated.ipynb](analysis_zone/analysis_updated.ipynb). La variable `booked_rate` representa la no disponibilidad del calendario, que puede incluir bloqueos del propietario; no equivale a reservas confirmadas. Los resultados guardados proceden de ejecuciones anteriores y no se han recalculado durante esta actualización documental.

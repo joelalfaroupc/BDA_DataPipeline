@@ -1,38 +1,76 @@
-# BDA Data Pipeline
+# Barcelona Tourism Data Pipeline
 
-Proyecto de Large-Scale Data Engineering for AI centrado en Barcelona, turismo y Airbnb.
+**From heterogeneous urban data to an integrated analytical database and temporal Airbnb analysis.**
 
-La entrega final esta organizada por fases y en formato notebook-only:
+University team project for Large-Scale Data Engineering for AI. The pipeline combines tourism, accommodation, weather and socioeconomic data for Barcelona, using five data zones to make ingestion, cleaning, integration and analysis explicit.
 
-- [landing_zone/landing.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/landing_zone/landing.ipynb)
-- [formatted_zone/formatted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/formatted.ipynb)
-- [trusted_zone/trusted.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/trusted.ipynb)
-- [exploitation_zone/exploitation.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/exploitation.ipynb)
-- [analysis_zone/analysis.ipynb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/analysis_zone/analysis.ipynb)
+## What the project delivers
 
-Los notebooks conservan sus outputs en las celdas. No se generan reportes JSON externos.
+- Nine source datasets covering points of interest, hotels, weather, Airbnb listings, neighborhoods, reviews and availability calendars, neighborhood income and tourist accommodation licenses.
+- Persistent DuckDB databases for formatted, trusted and exploitation data.
+- District and neighborhood profiles, enriched listings and daily analytical features.
+- Exploratory segmentation and predictive experiments with chronological train/test splits, baselines and error metrics.
 
-## Artefactos persistidos
+The main analytical target is a **calendar non-availability rate**. The code names it `booked_rate`, but unavailable nights can also be owner-blocked: this is an availability proxy, not a count of confirmed bookings.
 
-- CSV raw versionados solo en `landing_zone/raw`
-- [formatted_zone/formatted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/formatted_zone/formatted_zone.duckdb)
-- [trusted_zone/trusted_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/trusted_zone/trusted_zone.duckdb)
-- [exploitation_zone/exploitation_zone.duckdb](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/exploitation_zone/exploitation_zone.duckdb)
+## How it works
 
-## Orden recomendado
+```text
+Source CSVs → Landing → Formatted → Trusted → Exploitation → Analysis
+                        PySpark transformations / DuckDB persistence
+```
 
-1. `landing`
-2. `formatted`
-3. `trusted`
-4. `exploitation`
-5. `analysis`
+| Zone | Implementation | Purpose |
+| --- | --- | --- |
+| Landing | [landing notebook](landing_zone/landing.ipynb) | Collect and retain source snapshots. |
+| Formatted | [formatted notebook](formatted_zone/formatted.ipynb) | Standardize names, types and schemas. |
+| Trusted | [trusted notebook](trusted_zone/trusted.ipynb) | Deduplicate, check required fields and coordinates, reconcile territorial identifiers and validate calendar/listing relationships. |
+| Exploitation | [exploitation notebook](exploitation_zone/exploitation.ipynb) | Join sources into reusable profiles and daily feature tables. |
+| Analysis | [updated analysis](analysis_zone/analysis_updated.ipynb) | Explore neighborhood groups and compare predictive models with a temporal holdout. |
 
-## Requisitos
+The analytical notebook implements KMeans, linear regression trained by gradient descent and KNN. Feature variants compare calendar, weather, price and combined information. MAE, RMSE and R² are reported against a baseline.
 
-- Python 3
-- Java 21 para ejecutar Spark
-- PySpark
-- DuckDB
-- Jupyter Notebook
+Income and accommodation-license data enrich the integrated database; they are not all used as features in the current prediction experiments.
 
-El resumen extendido esta en [RESUMEN_PROYECTO.md](/Users/joelalfaro/Documents/UPC/Q6/BDA/PROYECTO/RESUMEN_PROYECTO.md).
+## Results and evidence
+
+The updated notebook retains experiment outputs. One recorded configuration uses 16,054 training observations and 4,044 test observations, split by date. KNN with 15 neighbors and the combined feature set reports **RMSE 0.0713**, compared with **0.1159** for the baseline on the same split.
+
+These are archived notebook results, not a fresh execution or a general performance guarantee. They predict the availability proxy and do not establish causal effects of weather, price or tourism pressure.
+
+Explore the [extended project summary](RESUMEN_PROYECTO.md) and the [integrated DuckDB database](exploitation_zone/exploitation_zone.duckdb). The [earlier analysis notebook](analysis_zone/analysis.ipynb) is retained for context.
+
+## Run the notebooks
+
+Use Python 3.11 or later, Java compatible with the installed PySpark version, and an isolated environment:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install jupyterlab pyspark duckdb matplotlib
+jupyter lab
+```
+
+On Windows, activate with `.venv\Scripts\activate`. Dependencies are currently unpinned.
+
+Run the notebooks in the zone order above. Several notebooks resolve paths from the kernel's working directory, which must be the repository root. If the notebook opens with its own folder as the working directory, run this cell before the existing setup cells:
+
+```python
+from pathlib import Path
+import os
+
+root = next(
+    (p for p in (Path.cwd(), *Path.cwd().parents)
+     if (p / "landing_zone").is_dir() and (p / "trusted_zone").is_dir()),
+    None,
+)
+if root is None:
+    raise RuntimeError("Open the notebook inside BDA_DataPipeline")
+os.chdir(root)
+```
+
+Versioned source snapshots and databases allow inspection without recollecting every source. Rerunning ingestion can change snapshot dates and downstream results.
+
+## Project context
+
+This repository preserves the university team's implementation and commit history from [K4NG14/BDA_DataPipeline](https://github.com/K4NG14/BDA_DataPipeline). This portfolio edition improves the documentation and navigation.
